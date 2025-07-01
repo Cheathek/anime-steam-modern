@@ -63,7 +63,7 @@ export function HomePage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen bg-slate-950"
+      className="min-h-screen bg-white dark:bg-slate-950"
     >
       {/* Hero Section */}
       <Hero />

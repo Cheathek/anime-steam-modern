@@ -19,8 +19,10 @@ AniStream is a modern web application for discovering, browsing, and learning ab
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/your-username/anistream.git
-   cd anistream
+   git clone https://github.com/Cheathek/anime-steam-modern.git
+   ```
+   ```
+   cd anime-steam-modern
    ```
 
 2. **Install dependencies:**

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, Pause, Calendar, Star, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -61,7 +61,7 @@ export function Hero() {
 
   if (isLoading) {
     return (
-      <div className="relative h-screen bg-slate-900 flex items-center justify-center">
+      <div className="relative h-screen bg-white dark:bg-slate-900 flex items-center justify-center">
         <Loading size="lg" text="Loading upcoming anime..." />
       </div>
     );
@@ -69,7 +69,7 @@ export function Hero() {
 
   if (upcomingAnime.length === 0) {
     return (
-      <div className="relative h-screen bg-slate-900 flex items-center justify-center">
+      <div className="relative h-screen bg-white dark:bg-slate-900 flex items-center justify-center">
         <p className="text-slate-400">No upcoming anime found</p>
       </div>
     );
@@ -95,8 +95,8 @@ export function Hero() {
               alt={currentAnime.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-transparent dark:from-black/80 dark:via-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent dark:from-black/60" />
           </div>
 
           {/* Content */}
@@ -114,21 +114,21 @@ export function Hero() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.3 }}
-                    className="inline-flex items-center space-x-2 bg-purple-600/20 backdrop-blur-sm border border-purple-500/30 px-4 py-2 rounded-full"
+                    className="inline-flex items-center space-x-2 bg-purple-100/60 dark:bg-purple-600/20 backdrop-blur-sm border border-purple-300/30 dark:border-purple-500/30 px-4 py-2 rounded-full"
                   >
-                    <Clock className="w-4 h-4 text-purple-400" />
-                    <span className="text-purple-300 font-medium">Upcoming</span>
+                    <Clock className="w-4 h-4 text-purple-500 dark:text-purple-400" />
+                    <span className="text-purple-500 dark:text-purple-300 font-medium">Upcoming</span>
                   </motion.div>
 
                   {/* Title */}
-                  <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
-                    <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                  <h1 className="text-4xl md:text-6xl font-bold text-black dark:text-white leading-tight">
+                    <span className="bg-gradient-to-r from-black to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
                       {currentAnime.title}
                     </span>
                   </h1>
 
                   {/* Metadata */}
-                  <div className="flex items-center space-x-6 text-slate-300">
+                  <div className="flex items-center space-x-6 text-slate-700 dark:text-slate-300">
                     {currentAnime.score && (
                       <div className="flex items-center space-x-1">
                         <Star className="w-4 h-4 fill-current text-yellow-400" />

@@ -71,7 +71,7 @@ export function AnimeDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 pt-20 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-slate-950 pt-20 flex items-center justify-center">
         <Loading size="lg" text="Loading anime details..." />
       </div>
     );
@@ -79,9 +79,9 @@ export function AnimeDetailPage() {
 
   if (!anime) {
     return (
-      <div className="min-h-screen bg-slate-950 pt-20 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-slate-950 pt-20 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-slate-400 text-lg mb-4">Anime not found</p>
+          <p className="text-slate-500 dark:text-slate-400 text-lg mb-4">Anime not found</p>
           <Link to="/">
             <Button>
               <ChevronLeft className="w-4 h-4 mr-2" />
@@ -94,7 +94,7 @@ export function AnimeDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       {/* Hero Section */}
       <div className="relative h-96 overflow-hidden">
         {anime.images?.jpg?.large_image_url && (
@@ -104,13 +104,12 @@ export function AnimeDetailPage() {
               alt={anime.title}
               className="w-full h-full object-cover blur-sm scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-950 via-white/80 dark:via-slate-950/80 to-white/40 dark:to-slate-950/40" />
           </div>
         )}
-        
         <div className="relative h-full flex items-end">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 w-full">
-            <Link to="/" className="inline-flex items-center text-slate-400 hover:text-white mb-4 transition-colors">
+            <Link to="/" className="inline-flex items-center text-slate-500 dark:text-slate-400 hover:text-black dark:hover:text-white mb-4 transition-colors">
               <ChevronLeft className="w-4 h-4 mr-1" />
               Back to Browse
             </Link>
@@ -127,13 +126,12 @@ export function AnimeDetailPage() {
             animate={{ opacity: 1, y: 0 }}
             className="md:col-span-1"
           >
-            <Card className="overflow-hidden">
+            <Card className="overflow-hidden bg-white dark:bg-slate-900">
               <img
                 src={anime.images?.jpg?.large_image_url}
                 alt={anime.title}
                 className="w-full aspect-[2/3] object-cover"
               />
-              
               <div className="p-6 space-y-4">
                 {/* Action Buttons */}
                 <div className="grid grid-cols-2 gap-3">
@@ -146,18 +144,17 @@ export function AnimeDetailPage() {
                     Favorite
                   </Button>
                 </div>
-
                 {/* External Links */}
                 {anime.external && anime.external.length > 0 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold text-white">External Links</h3>
+                    <h3 className="font-semibold text-black dark:text-white">External Links</h3>
                     {anime.external.slice(0, 3).map((link: any, index: number) => (
                       <a
                         key={index}
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-2 text-primary-400 hover:text-primary-300 transition-colors"
+                        className="flex items-center space-x-2 text-primary-700 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
                         <span className="text-sm">{link.name}</span>
@@ -178,12 +175,11 @@ export function AnimeDetailPage() {
           >
             {/* Title & Basic Info */}
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-2">
                 {anime.title}
               </h1>
-              
               {anime.title_english && anime.title_english !== anime.title && (
-                <p className="text-lg text-slate-400 mb-4">{anime.title_english}</p>
+                <p className="text-lg text-slate-500 dark:text-slate-400 mb-4">{anime.title_english}</p>
               )}
 
               {/* Status Badges */}
@@ -191,13 +187,11 @@ export function AnimeDetailPage() {
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(anime.status)}`}>
                   {anime.status}
                 </span>
-                
                 {anime.type && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-primary-400 bg-primary-500/20 border border-primary-500/30">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-primary-700 dark:text-primary-400 bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500/30">
                     {anime.type}
                   </span>
                 )}
-
                 {anime.rating && (
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getRatingColor(anime.rating)}`}>
                     {anime.rating}
@@ -211,38 +205,38 @@ export function AnimeDetailPage() {
                   <div className="flex items-center space-x-2">
                     <Star className="w-5 h-5 fill-current text-yellow-400" />
                     <div>
-                      <p className="text-white font-semibold">{anime.score}</p>
-                      <p className="text-xs text-slate-400">Score</p>
+                      <p className="text-black dark:text-white font-semibold">{anime.score}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Score</p>
                     </div>
                   </div>
                 )}
 
                 {anime.episodes && (
                   <div className="flex items-center space-x-2">
-                    <Play className="w-5 h-5 text-primary-400" />
+                    <Play className="w-5 h-5 text-primary-700 dark:text-primary-400" />
                     <div>
-                      <p className="text-white font-semibold">{anime.episodes}</p>
-                      <p className="text-xs text-slate-400">Episodes</p>
+                      <p className="text-black dark:text-white font-semibold">{anime.episodes}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Episodes</p>
                     </div>
                   </div>
                 )}
 
                 {anime.duration && (
                   <div className="flex items-center space-x-2">
-                    <Clock className="w-5 h-5 text-slate-400" />
+                    <Clock className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                     <div>
-                      <p className="text-white font-semibold">{anime.duration}</p>
-                      <p className="text-xs text-slate-400">Duration</p>
+                      <p className="text-black dark:text-white font-semibold">{anime.duration}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Duration</p>
                     </div>
                   </div>
                 )}
 
                 {anime.members && (
                   <div className="flex items-center space-x-2">
-                    <Users className="w-5 h-5 text-slate-400" />
+                    <Users className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                     <div>
-                      <p className="text-white font-semibold">{anime.members.toLocaleString()}</p>
-                      <p className="text-xs text-slate-400">Members</p>
+                      <p className="text-black dark:text-white font-semibold">{anime.members.toLocaleString()}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Members</p>
                     </div>
                   </div>
                 )}
@@ -251,46 +245,43 @@ export function AnimeDetailPage() {
 
             {/* Synopsis */}
             {anime.synopsis && (
-              <Card>
+              <Card className="bg-white dark:bg-slate-900">
                 <div className="p-6">
-                  <h2 className="text-xl font-semibold text-white mb-3">Synopsis</h2>
-                  <p className="text-slate-300 leading-relaxed">{anime.synopsis}</p>
+                  <h2 className="text-xl font-semibold text-black dark:text-white mb-3">Synopsis</h2>
+                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{anime.synopsis}</p>
                 </div>
               </Card>
             )}
 
             {/* Details Grid */}
-            <Card>
+            <Card className="bg-white dark:bg-slate-900">
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-white mb-4">Information</h2>
+                <h2 className="text-xl font-semibold text-black dark:text-white mb-4">Information</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   {anime.aired?.string && (
                     <div>
-                      <span className="text-slate-400">Aired:</span>
-                      <span className="text-white ml-2">{anime.aired.string}</span>
+                      <span className="text-slate-500 dark:text-slate-400">Aired:</span>
+                      <span className="text-black dark:text-white ml-2">{anime.aired.string}</span>
                     </div>
                   )}
-                  
                   {anime.studios && anime.studios.length > 0 && (
                     <div>
-                      <span className="text-slate-400">Studio:</span>
-                      <span className="text-white ml-2">
+                      <span className="text-slate-500 dark:text-slate-400">Studio:</span>
+                      <span className="text-black dark:text-white ml-2">
                         {anime.studios.map((studio: any) => studio.name).join(', ')}
                       </span>
                     </div>
                   )}
-
                   {anime.source && (
                     <div>
-                      <span className="text-slate-400">Source:</span>
-                      <span className="text-white ml-2">{anime.source}</span>
+                      <span className="text-slate-500 dark:text-slate-400">Source:</span>
+                      <span className="text-black dark:text-white ml-2">{anime.source}</span>
                     </div>
                   )}
-
                   {anime.licensors && anime.licensors.length > 0 && (
                     <div>
-                      <span className="text-slate-400">Licensors:</span>
-                      <span className="text-white ml-2">
+                      <span className="text-slate-500 dark:text-slate-400">Licensors:</span>
+                      <span className="text-black dark:text-white ml-2">
                         {anime.licensors.map((licensor: any) => licensor.name).join(', ')}
                       </span>
                     </div>
@@ -300,12 +291,12 @@ export function AnimeDetailPage() {
                 {/* Genres */}
                 {anime.genres && anime.genres.length > 0 && (
                   <div className="mt-4">
-                    <span className="text-slate-400 text-sm">Genres:</span>
+                    <span className="text-slate-500 dark:text-slate-400 text-sm">Genres:</span>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {anime.genres.map((genre: any) => (
                         <span
                           key={genre.mal_id}
-                          className="px-3 py-1 bg-slate-800 text-slate-300 text-sm rounded-full"
+                          className="px-3 py-1 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm rounded-full"
                         >
                           {genre.name}
                         </span>
@@ -318,9 +309,9 @@ export function AnimeDetailPage() {
 
             {/* Characters & Voice Actors */}
             {characters.length > 0 && (
-              <Card>
+              <Card className="bg-white dark:bg-slate-900">
                 <div className="p-6">
-                  <h2 className="text-xl font-semibold text-white mb-4">Characters & Voice Actors</h2>
+                  <h2 className="text-xl font-semibold text-black dark:text-white mb-4">Characters & Voice Actors</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {characters.map((char, index) => (
                       <motion.div
@@ -328,45 +319,43 @@ export function AnimeDetailPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-center space-x-3 p-3 bg-slate-800/50 rounded-lg"
+                        className="flex items-center space-x-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg"
                       >
                         {/* Character Image */}
                         <img
                           src={char.character.images?.jpg?.image_url}
                           alt={char.character.name}
-                          className="w-12 h-12 rounded-full object-cover border border-slate-600"
+                          className="w-12 h-12 rounded-full object-cover border border-slate-300 dark:border-slate-600"
                           loading="lazy"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.src = '/placeholder-character.jpg';
                           }}
                         />
-                        
                         {/* Character Info */}
                         <div className="flex-1 min-w-0">
-                          <p className="text-white font-medium truncate">
+                          <p className="text-black dark:text-white font-medium truncate">
                             {char.character.name}
                           </p>
-                          <p className="text-slate-400 text-sm truncate">
+                          <p className="text-slate-500 dark:text-slate-400 text-sm truncate">
                             {char.role}
                           </p>
                         </div>
-                        
                         {/* Voice Actor Info & Image */}
                         {char.voice_actors && char.voice_actors[0] && (
                           <div className="flex items-center space-x-2">
                             <div className="text-right">
-                              <p className="text-white text-sm truncate max-w-24">
+                              <p className="text-black dark:text-white text-sm truncate max-w-24">
                                 {char.voice_actors[0].person.name}
                               </p>
-                              <p className="text-slate-400 text-xs">
+                              <p className="text-slate-500 dark:text-slate-400 text-xs">
                                 {char.voice_actors[0].language}
                               </p>
                             </div>
                             <img
                               src={char.voice_actors[0].person.images?.jpg?.image_url}
                               alt={char.voice_actors[0].person.name}
-                              className="w-12 h-12 rounded-full object-cover border border-slate-600"
+                              className="w-12 h-12 rounded-full object-cover border border-slate-300 dark:border-slate-600"
                               loading="lazy"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
@@ -384,9 +373,9 @@ export function AnimeDetailPage() {
 
             {/* Staff */}
             {staff.length > 0 && (
-              <Card>
+              <Card className="bg-white dark:bg-slate-900">
                 <div className="p-6">
-                  <h2 className="text-xl font-semibold text-white mb-4">Staff</h2>
+                  <h2 className="text-xl font-semibold text-black dark:text-white mb-4">Staff</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {staff.map((member, index) => (
                       <motion.div
@@ -394,7 +383,7 @@ export function AnimeDetailPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-center space-x-3 p-3 bg-slate-800/50 rounded-lg"
+                        className="flex items-center space-x-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg"
                       >
                         <img
                           src={member.person.images?.jpg?.image_url}
@@ -403,10 +392,10 @@ export function AnimeDetailPage() {
                           loading="lazy"
                         />
                         <div className="flex-1">
-                          <p className="text-white font-medium">
+                          <p className="text-black dark:text-white font-medium">
                             {member.person.name}
                           </p>
-                          <p className="text-slate-400 text-sm">
+                          <p className="text-slate-500 dark:text-slate-400 text-sm">
                             {member.positions.join(', ')}
                           </p>
                         </div>

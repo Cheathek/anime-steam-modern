@@ -173,16 +173,16 @@ export function CategoryPage() {
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
   return (
-    <div className="min-h-screen bg-slate-950 pt-20">
+    <div className="min-h-screen bg-white dark:bg-slate-950 pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <motion.h1
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-3xl md:text-4xl font-bold text-white"
+            className="text-3xl md:text-4xl font-bold text-black dark:text-white"
           >
-            <span className="bg-gradient-to-r from-primary-400 to-primary-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-500 bg-clip-text text-transparent">
               {getPageTitle()}
             </span>
           </motion.h1>
@@ -208,16 +208,16 @@ export function CategoryPage() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6 mb-8"
+            className="bg-slate-100 dark:bg-slate-900/50 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-xl p-6 mb-8"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               {/* Status Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Status</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Status</label>
                 <select
                   value={filters.status}
                   onChange={(e) => updateFilters('status', e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {statusOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -229,11 +229,11 @@ export function CategoryPage() {
 
               {/* Type Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Type</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Type</label>
                 <select
                   value={filters.type}
                   onChange={(e) => updateFilters('type', e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {typeOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -245,11 +245,11 @@ export function CategoryPage() {
 
               {/* Genre Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Genre</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Genre</label>
                 <select
                   value={filters.genre}
                   onChange={(e) => updateFilters('genre', e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="">All Genres</option>
                   {genres.map(genre => (
@@ -262,11 +262,11 @@ export function CategoryPage() {
 
               {/* Year Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Year</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Year</label>
                 <select
                   value={filters.year}
                   onChange={(e) => updateFilters('year', e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {yearOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -278,11 +278,11 @@ export function CategoryPage() {
 
               {/* Score Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Min Score</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Min Score</label>
                 <select
                   value={filters.score}
                   onChange={(e) => updateFilters('score', e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {scoreOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -336,7 +336,7 @@ export function CategoryPage() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-slate-400 mb-6"
+            className="text-slate-500 dark:text-slate-400 mb-6"
           >
             Showing {anime.length} anime
           </motion.p>
@@ -383,7 +383,7 @@ export function CategoryPage() {
           </>
         ) : (
           <div className="text-center py-16">
-            <p className="text-slate-400 text-lg">No anime found matching your criteria</p>
+            <p className="text-slate-500 dark:text-slate-400 text-lg">No anime found matching your criteria</p>
             {activeFilterCount > 0 && (
               <Button variant="outline" onClick={clearFilters} className="mt-4">
                 Clear Filters
