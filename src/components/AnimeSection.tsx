@@ -13,13 +13,48 @@ interface AnimeSectionProps {
   linkText?: string;
 }
 
+function renderLoadingSkeletons() {
+  const skeletonKeys = [
+    'skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4',
+    'skeleton-5', 'skeleton-6', 'skeleton-7', 'skeleton-8'
+  ];
+  return skeletonKeys.map((key) => (
+    <div key={key} className="flex-shrink-0 w-48">
+      <SkeletonCard />
+    </div>
+  ));
+}
+
+function renderAnimeList(anime: any[]) {
+  return anime.map((animeItem, index) => (
+    <motion.div
+      key={animeItem.mal_id}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="flex-shrink-0 w-48"
+    >
+      <AnimeCard anime={animeItem} />
+    </motion.div>
+  ));
+}
+
+function renderEmptyState() {
+  return (
+    <div className="w-full text-center py-12 text-slate-400">
+      No anime found
+    </div>
+  );
+}
+
 export function AnimeSection({ 
   title, 
   anime, 
   isLoading = false, 
   linkTo, 
   linkText = 'View All' 
-}: AnimeSectionProps) {
+}: Readonly<AnimeSectionProps>) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -98,36 +133,21 @@ export function AnimeSection({
               className="flex space-x-4 overflow-x-auto scrollbar-hide pb-4 scroll-smooth"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              {isLoading ? (
-                Array.from({ length: 8 }).map((_, index) => (
-                  <div key={index} className="flex-shrink-0 w-48">
-                    <SkeletonCard />
-                  </div>
-                ))
-              ) : anime.length > 0 ? (
-                anime.map((animeItem, index) => (
-                  <motion.div
-                    key={animeItem.mal_id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex-shrink-0 w-48"
-                  >
-                    <AnimeCard anime={animeItem} />
-                  </motion.div>
-                ))
-              ) : (
-                <div className="w-full text-center py-12 text-slate-400">
-                  No anime found
-                </div>
-              )}
+              {(() => {
+                if (isLoading) {
+                  return renderLoadingSkeletons();
+                }
+                if (anime.length > 0) {
+                  return renderAnimeList(anime);
+                }
+                return renderEmptyState();
+              })()}
             </div>
           </div>
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }

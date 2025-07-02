@@ -52,7 +52,7 @@ export function Navbar() {
                   <Play className="w-4 h-4 text-white fill-current" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-primary-400 to-primary-500 bg-clip-text text-transparent">
-                  AniStream
+                  ZenkaiZa
                 </span>
               </motion.div>
             </Link>

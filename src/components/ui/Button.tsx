@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ComponentPropsWithoutRef<typeof motion.button> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
@@ -17,7 +17,7 @@ export function Button({
   children,
   disabled,
   ...props
-}: ButtonProps) {
+}: Readonly<ButtonProps>) {
   const baseClasses = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variants = {

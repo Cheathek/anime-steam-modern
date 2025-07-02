@@ -26,7 +26,7 @@ interface AnimeCardProps {
   className?: string;
 }
 
-export function AnimeCard({ anime, showDetails = true, className = '' }: AnimeCardProps) {
+export function AnimeCard({ anime, showDetails = true, className = '' }: Readonly<AnimeCardProps>) {
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
   const getStatusColor = (status?: string) => {
@@ -37,6 +37,16 @@ export function AnimeCard({ anime, showDetails = true, className = '' }: AnimeCa
       default: return 'bg-slate-500';
     }
   };
+
+  // Extracted status label logic
+  let statusLabel = '';
+  if (anime.status === 'Currently Airing') {
+    statusLabel = 'Airing';
+  } else if (anime.status === 'Not yet aired') {
+    statusLabel = 'Upcoming';
+  } else {
+    statusLabel = 'Finished';
+  }
 
   return (
     <motion.div
@@ -73,8 +83,7 @@ export function AnimeCard({ anime, showDetails = true, className = '' }: AnimeCa
           {/* Status Badge */}
           {anime.status && (
             <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(anime.status)}`}>
-              {anime.status === 'Currently Airing' ? 'Airing' : 
-               anime.status === 'Not yet aired' ? 'Upcoming' : 'Finished'}
+              {statusLabel}
             </div>
           )}
 

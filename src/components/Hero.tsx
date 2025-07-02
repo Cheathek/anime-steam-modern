@@ -232,9 +232,9 @@ export function Hero() {
 
       {/* Indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex space-x-2">
-        {upcomingAnime.map((_, index) => (
+        {upcomingAnime.map((anime, index) => (
           <button
-            key={index}
+            key={anime.mal_id}
             onClick={() => setCurrentSlide(index)}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${
               index === currentSlide

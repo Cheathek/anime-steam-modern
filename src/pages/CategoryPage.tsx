@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Filter, X, ChevronDown } from 'lucide-react';
+import { Filter, X } from 'lucide-react';
 import { jikanApi } from '../services/jikanApi';
 import { AnimeCard } from '../components/AnimeCard';
-import { Loading, SkeletonCard } from '../components/ui/Loading';
+import { SkeletonCard } from '../components/ui/Loading';
 import { Button } from '../components/ui/Button';
 
 interface FilterState {
@@ -26,11 +26,11 @@ export function CategoryPage() {
   const [genres, setGenres] = useState<any[]>([]);
   
   const [filters, setFilters] = useState<FilterState>({
-    status: searchParams.get('status') || '',
-    type: searchParams.get('type') || '',
-    genre: searchParams.get('genre') || '',
-    year: searchParams.get('year') || '',
-    score: searchParams.get('score') || '',
+    status: searchParams.get('status') ?? '',
+    type: searchParams.get('type') ?? '',
+    genre: searchParams.get('genre') ?? '',
+    year: searchParams.get('year') ?? '',
+    score: searchParams.get('score') ?? '',
   });
 
   const getPageTitle = () => {
@@ -93,9 +93,54 @@ export function CategoryPage() {
   const loadGenres = async () => {
     try {
       const response = await jikanApi.getGenres();
-      setGenres(response.data || []);
+      setGenres(response.data ?? []);
     } catch (error) {
       console.error('Failed to load genres:', error);
+    }
+  };
+
+  // Helper: Determine the current page type
+  const getPageType = () => {
+    const path = location.pathname;
+    if (path.includes('/top')) return 'top';
+    if (path.includes('/seasonal')) return 'seasonal';
+    if (path.includes('/movies')) return 'movies';
+    return 'browse';
+  };
+
+  // Helper: Build params for browse
+  const buildBrowseParams = (pageNum: number) => {
+    const params: any = {};
+    if (filters.status) params.status = filters.status;
+    if (filters.type) params.type = filters.type;
+    if (filters.genre) params.genres = filters.genre;
+    if (filters.year) params.start_date = `${filters.year}-01-01`;
+    if (filters.score) params.min_score = filters.score;
+    params.page = pageNum;
+    return params;
+  };
+
+  // Helper: Fetch anime data based on page type
+  const fetchAnimeData = async (pageType: string, pageNum: number) => {
+    switch (pageType) {
+      case 'top': {
+        const type = filters.type || (location.pathname.includes('/movies') ? 'movie' : undefined);
+        const filter = searchParams.get('filter') ?? undefined;
+        return await jikanApi.getTopAnime(type, filter, pageNum);
+      }
+      case 'seasonal': {
+        if (searchParams.get('upcoming') === 'true') {
+          return await jikanApi.getUpcomingAnime();
+        }
+        return await jikanApi.getSeasonalAnime();
+      }
+      case 'movies': {
+        return await jikanApi.getTopAnime('movie', undefined, pageNum);
+      }
+      default: {
+        const params = buildBrowseParams(pageNum);
+        return await jikanApi.searchAnime('', params);
+      }
     }
   };
 
@@ -105,43 +150,17 @@ export function CategoryPage() {
     setIsLoading(replace);
 
     try {
-      const path = location.pathname;
-      let response;
+      const pageType = getPageType();
+      const response = await fetchAnimeData(pageType, pageNum);
+      const newAnime = response.data ?? [];
 
-      if (path.includes('/top')) {
-        const type = filters.type || (path.includes('/movies') ? 'movie' : undefined);
-        const filter = searchParams.get('filter') || undefined;
-        response = await jikanApi.getTopAnime(type, filter, pageNum);
-      } else if (path.includes('/seasonal')) {
-        if (searchParams.get('upcoming') === 'true') {
-          response = await jikanApi.getUpcomingAnime();
-        } else {
-          response = await jikanApi.getSeasonalAnime();
-        }
-      } else if (path.includes('/movies')) {
-        response = await jikanApi.getTopAnime('movie', undefined, pageNum);
-      } else {
-        // Browse with filters
-        const params: any = {};
-        if (filters.status) params.status = filters.status;
-        if (filters.type) params.type = filters.type;
-        if (filters.genre) params.genres = filters.genre;
-        if (filters.year) params.start_date = `${filters.year}-01-01`;
-        if (filters.score) params.min_score = filters.score;
-        params.page = pageNum;
-
-        response = await jikanApi.searchAnime('', params);
-      }
-
-      const newAnime = response.data || [];
-      
       if (replace) {
         setAnime(newAnime);
       } else {
         setAnime(prev => [...prev, ...newAnime]);
       }
-      
-      setHasNextPage(response.pagination?.has_next_page || false);
+
+      setHasNextPage(response.pagination?.has_next_page ?? false);
     } catch (error) {
       console.error('Failed to load anime:', error);
       if (replace) setAnime([]);
@@ -213,8 +232,9 @@ export function CategoryPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               {/* Status Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Status</label>
+                <label htmlFor="status-filter" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Status</label>
                 <select
+                  id="status-filter"
                   value={filters.status}
                   onChange={(e) => updateFilters('status', e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -229,8 +249,9 @@ export function CategoryPage() {
 
               {/* Type Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Type</label>
+                <label htmlFor="type-filter" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Type</label>
                 <select
+                  id="type-filter"
                   value={filters.type}
                   onChange={(e) => updateFilters('type', e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -245,8 +266,9 @@ export function CategoryPage() {
 
               {/* Genre Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Genre</label>
+                <label htmlFor="genre-filter" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Genre</label>
                 <select
+                  id="genre-filter"
                   value={filters.genre}
                   onChange={(e) => updateFilters('genre', e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -262,8 +284,9 @@ export function CategoryPage() {
 
               {/* Year Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Year</label>
+                <label htmlFor="year-filter" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Year</label>
                 <select
+                  id="year-filter"
                   value={filters.year}
                   onChange={(e) => updateFilters('year', e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -278,8 +301,9 @@ export function CategoryPage() {
 
               {/* Score Filter */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Min Score</label>
+                <label htmlFor="score-filter" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Min Score</label>
                 <select
+                  id="score-filter"
                   value={filters.score}
                   onChange={(e) => updateFilters('score', e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -343,54 +367,63 @@ export function CategoryPage() {
         )}
 
         {/* Anime Grid */}
-        {isLoading && anime.length === 0 ? (
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-            {Array.from({ length: 18 }).map((_, index) => (
-              <SkeletonCard key={index} />
-            ))}
-          </div>
-        ) : anime.length > 0 ? (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
-            >
-              {anime.map((animeItem, index) => (
-                <motion.div
-                  key={animeItem.mal_id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <AnimeCard anime={animeItem} />
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Load More Button */}
-            {hasNextPage && (
-              <div className="flex justify-center mt-12">
-                <Button
-                  onClick={() => setPage(prev => prev + 1)}
-                  isLoading={isLoading}
-                  size="lg"
-                >
-                  Load More
-                </Button>
+        {(() => {
+          if (isLoading && anime.length === 0) {
+            return (
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                {Array.from({ length: 18 }).map((_, idx) => {
+                  const skeletonKey = `skeleton-${idx}-${Math.random().toString(36).slice(2, 11)}`;
+                  return <SkeletonCard key={skeletonKey} />;
+                })}
               </div>
-            )}
-          </>
-        ) : (
-          <div className="text-center py-16">
-            <p className="text-slate-500 dark:text-slate-400 text-lg">No anime found matching your criteria</p>
-            {activeFilterCount > 0 && (
-              <Button variant="outline" onClick={clearFilters} className="mt-4">
-                Clear Filters
-              </Button>
-            )}
-          </div>
-        )}
+            );
+          } else if (anime.length > 0) {
+            return (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
+                >
+                  {anime.map((animeItem, index) => (
+                    <motion.div
+                      key={animeItem.mal_id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <AnimeCard anime={animeItem} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                {/* Load More Button */}
+                {hasNextPage && (
+                  <div className="flex justify-center mt-12">
+                    <Button
+                      onClick={() => setPage(prev => prev + 1)}
+                      isLoading={isLoading}
+                      size="lg"
+                    >
+                      Load More
+                    </Button>
+                  </div>
+                )}
+              </>
+            );
+          } else {
+            return (
+              <div className="text-center py-16">
+                <p className="text-slate-500 dark:text-slate-400 text-lg">No anime found matching your criteria</p>
+                {activeFilterCount > 0 && (
+                  <Button variant="outline" onClick={clearFilters} className="mt-4">
+                    Clear Filters
+                  </Button>
+                )}
+              </div>
+            );
+          }
+        })()}
       </div>
     </div>
   );

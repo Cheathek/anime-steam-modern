@@ -6,8 +6,8 @@ import { jikanApi } from '../services/jikanApi';
 import { Loading } from './ui/Loading';
 
 interface SearchBarProps {
-  isOpen: boolean;
-  onClose: () => void;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 }
 
 export function SearchBar({ isOpen, onClose }: SearchBarProps) {
@@ -54,7 +54,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
     setIsLoading(true);
     try {
       const response = await jikanApi.searchAnime(searchQuery);
-      const deduplicatedResults = jikanApi.deduplicateAnime(response.data || []);
+      const deduplicatedResults = jikanApi.deduplicateAnime(response.data ?? []);
       setResults(deduplicatedResults.slice(0, 8));
     } catch (error) {
       console.error('Search failed:', error);
@@ -83,7 +83,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
       'Finished Airing': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
       'Not yet aired': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
     };
-    
+
     return colors[status as keyof typeof colors] || 'bg-slate-500/20 text-slate-400 border-slate-500/30';
   };
 
@@ -94,7 +94,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
       'OVA': 'bg-teal-500/20 text-teal-400 border-teal-500/30',
       'ONA': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
     };
-    
+
     return colors[type as keyof typeof colors] || 'bg-slate-500/20 text-slate-400 border-slate-500/30';
   };
 
@@ -127,7 +127,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Search for anime..."
-                className="w-full pl-10 pr-12 py-4 bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="capitalize w-full pl-10 pr-12 py-4 bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <button
                 onClick={onClose}
@@ -145,91 +145,116 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
             >
               {/* Custom Scrollbar Container */}
               <div className="max-h-96 overflow-y-auto custom-scrollbar">
-                {isLoading ? (
-                  <div className="p-8">
-                    <Loading text="Searching..." />
-                  </div>
-                ) : query && results.length > 0 ? (
-                  <div className="p-2">
-                    {results.map((anime, index) => (
-                      <motion.button
-                        key={anime.mal_id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        onClick={() => handleAnimeClick(anime.mal_id)}
-                        className="w-full flex items-start space-x-3 p-3 rounded-lg hover:bg-slate-800/50 transition-colors text-left group"
-                      >
-                        {/* Anime Poster */}
-                        <img
-                          src={anime.images?.jpg?.image_url || anime.images?.jpg?.small_image_url}
-                          alt={anime.title}
-                          className="w-12 h-16 object-cover rounded-md flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
-                          loading="lazy"
-                        />
-                        
-                        {/* Main Content */}
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-white font-medium truncate group-hover:text-primary-300 transition-colors">
-                            {anime.title}
-                          </h3>
-                          
-                          {/* Badges */}
-                          <div className="flex items-center space-x-2 mt-1">
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusBadge(anime.status)}`}>
-                              {anime.status === 'Currently Airing' ? 'Airing' : 
-                               anime.status === 'Not yet aired' ? 'Upcoming' : 'Finished'}
-                            </span>
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getTypeBadge(anime.type)}`}>
-                              {anime.type}
-                            </span>
-                          </div>
-                          
-                          {/* Stats */}
-                          <div className="flex items-center space-x-3 mt-2 text-sm text-slate-400">
-                            {anime.score && (
-                              <span className="flex items-center space-x-1">
-                                <Star className="w-3 h-3 fill-current text-yellow-400" />
-                                <span>{anime.score}</span>
+                {(() => {
+                  if (isLoading) {
+                    return (
+                      <div className="p-8">
+                        <Loading text="Searching..." />
+                      </div>
+                    );
+                  }
+
+                  if (query && results.length > 0) {
+                    return (
+                      <div className="p-2">
+                        {results.map((anime, index) => {
+                          let statusLabel = 'Finished';
+                          if (anime.status === 'Currently Airing') {
+                            statusLabel = 'Airing';
+                          } else if (anime.status === 'Not yet aired') {
+                            statusLabel = 'Upcoming';
+                          }
+                          return (
+                            <motion.button
+                              key={anime.mal_id}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                              onClick={() => handleAnimeClick(anime.mal_id)}
+                              className="w-full flex items-start space-x-3 p-3 rounded-lg hover:bg-slate-800/50 transition-colors text-left group"
+                            >
+                              {/* Anime Poster */}
+                              <img
+                                src={anime.images?.jpg?.image_url ?? anime.images?.jpg?.small_image_url}
+                                alt={anime.title}
+                                className="w-12 h-16 object-cover rounded-md flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
+                                loading="lazy"
+                              />
+
+                              {/* Main Content */}
+                              <div className="flex-1 min-w-0">
+                                <h3 className="text-white font-medium truncate group-hover:text-primary-300 transition-colors">
+                                  {anime.title}
+                                </h3>
+
+                                {/* Badges */}
+                                <div className="flex items-center space-x-2 mt-1">
+                                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusBadge(anime.status)}`}>
+                                    {statusLabel}
+                                  </span>
+                                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getTypeBadge(anime.type)}`}>
+                                    {anime.type}
+                                  </span>
+                                </div>
+
+                                {/* Stats */}
+                                <div className="flex items-center space-x-3 mt-2 text-sm text-slate-400">
+                                  {anime.score && (
+                                    <span className="flex items-center space-x-1">
+                                      <Star className="w-3 h-3 fill-current text-yellow-400" />
+                                      <span>{anime.score}</span>
+                                    </span>
+                                  )}
+                                  {anime.year && (
+                                    <span className="flex items-center space-x-1">
+                                      <Calendar className="w-3 h-3" />
+                                      <span>{anime.year}</span>
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    );
+                  }
+
+                  if (query && !isLoading) {
+                    return (
+                      <div className="p-8 text-center text-slate-400">
+                        No results found for "{query}"
+                      </div>
+                    );
+                  }
+
+                  if (!query && trending.length > 0) {
+                    return (
+                      <div className="p-4">
+                        <h3 className="text-lg font-semibold text-white mb-3">Trending Now</h3>
+                        <div className="space-y-2">
+                          {trending.map((anime, index) => (
+                            <motion.button
+                              key={anime.mal_id}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              onClick={() => handleAnimeClick(anime.mal_id)}
+                              className="w-full flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-left group"
+                            >
+                              <Play className="w-4 h-4 text-primary-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                              <span className="text-slate-300 hover:text-white transition-colors truncate">
+                                {anime.title}
                               </span>
-                            )}
-                            {anime.year && (
-                              <span className="flex items-center space-x-1">
-                                <Calendar className="w-3 h-3" />
-                                <span>{anime.year}</span>
-                              </span>
-                            )}
-                          </div>
+                            </motion.button>
+                          ))}
                         </div>
-                      </motion.button>
-                    ))}
-                  </div>
-                ) : query && !isLoading ? (
-                  <div className="p-8 text-center text-slate-400">
-                    No results found for "{query}"
-                  </div>
-                ) : !query && trending.length > 0 ? (
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-white mb-3">Trending Now</h3>
-                    <div className="space-y-2">
-                      {trending.map((anime, index) => (
-                        <motion.button
-                          key={anime.mal_id}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          onClick={() => handleAnimeClick(anime.mal_id)}
-                          className="w-full flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-left group"
-                        >
-                          <Play className="w-4 h-4 text-primary-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                          <span className="text-slate-300 hover:text-white transition-colors truncate">
-                            {anime.title}
-                          </span>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
+                      </div>
+                    );
+                  }
+
+                  return null;
+                })()}
               </div>
             </motion.div>
           </motion.div>
@@ -237,7 +262,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
       )}
 
       {/* Custom Scrollbar Styles */}
-      <style jsx>{`
+      <style>{`
         .custom-scrollbar {
           scrollbar-width: thin;
           scrollbar-color: rgba(139, 92, 246, 0.5) rgba(30, 41, 59, 0.3);

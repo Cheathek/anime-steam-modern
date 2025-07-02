@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 
 interface LoadingProps {
@@ -6,7 +5,7 @@ interface LoadingProps {
   text?: string;
 }
 
-export function Loading({ size = 'md', text }: LoadingProps) {
+export function Loading({ size = 'md', text }: Readonly<LoadingProps>) {
   const sizes = {
     sm: 'w-4 h-4',
     md: 'w-8 h-8',
@@ -46,17 +45,20 @@ export function SkeletonCard() {
   );
 }
 
-export function SkeletonText({ lines = 3 }: { lines?: number }) {
+export function SkeletonText({ lines = 3 }: Readonly<{ lines?: number }>) {
   return (
     <div className="animate-pulse space-y-2">
-      {Array.from({ length: lines }).map((_, i) => (
-        <div
-          key={i}
-          className={`h-4 bg-slate-800 rounded ${
-            i === lines - 1 ? 'w-2/3' : 'w-full'
-          }`}
-        />
-      ))}
+      {Array.from({ length: lines }).map((_, i) => {
+        const key = `skeleton-line-${lines}-${i}`;
+        return (
+          <div
+            key={key}
+            className={`h-4 bg-slate-800 rounded ${
+              i === lines - 1 ? 'w-2/3' : 'w-full'
+            }`}
+          />
+        );
+      })}
     </div>
   );
 }

@@ -9,7 +9,7 @@ interface CardProps {
   gradient?: boolean;
 }
 
-export function Card({ children, className, hover = true, gradient = false }: CardProps) {
+export function Card({ children, className, hover = true, gradient = false }: Readonly<CardProps>) {
   const baseClasses = 'rounded-xl backdrop-blur-sm border transition-all duration-300';
   
   const variants = gradient

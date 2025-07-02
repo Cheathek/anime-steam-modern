@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  Star, 
-  Calendar, 
+  Star,
   Clock, 
   Users, 
   Play, 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Hero } from '../components/Hero';
 import { AnimeSection } from '../components/AnimeSection';
@@ -11,10 +11,6 @@ export function HomePage() {
     topMovies: { data: [], loading: true },
     upcoming: { data: [], loading: true },
   });
-
-  useEffect(() => {
-    loadAllSections();
-  }, []);
 
   const loadAllSections = async () => {
     try {
@@ -50,6 +46,7 @@ export function HomePage() {
       console.error('Failed to load homepage data:', error);
       // Set loading to false for all sections on error
       setSections(prev => ({
+        ...prev,
         seasonal: { data: [], loading: false },
         topAiring: { data: [], loading: false },
         topMovies: { data: [], loading: false },
@@ -57,6 +54,10 @@ export function HomePage() {
       }));
     }
   };
+
+  useEffect(() => {
+    loadAllSections();
+  }, []);
 
   return (
     <motion.div
