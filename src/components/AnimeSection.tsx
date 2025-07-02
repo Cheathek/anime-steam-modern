@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimeCard } from './AnimeCard';
 import { SkeletonCard } from './ui/Loading';
@@ -97,7 +97,6 @@ export function AnimeSection({
                 className="flex items-center space-x-1 text-primary-400 hover:text-primary-300 transition-colors font-medium group"
               >
                 <span>{linkText}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
           )}
@@ -127,7 +126,7 @@ export function AnimeSection({
           )}
 
           {/* Anime Grid */}
-          <div className="group">
+          <div>
             <div
               ref={scrollContainerRef}
               className="flex space-x-4 overflow-x-auto scrollbar-hide pb-4 scroll-smooth"

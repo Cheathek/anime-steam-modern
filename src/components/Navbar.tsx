@@ -34,11 +34,10 @@ export function Navbar() {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || isOpen || showSearch
             ? 'bg-slate-950/90 backdrop-blur-md border-b border-slate-800/50'
             : 'bg-transparent'
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -63,11 +62,10 @@ export function Navbar() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                    location.pathname === item.path
+                  className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${location.pathname === item.path
                       ? 'text-primary-400'
                       : 'text-slate-300 hover:text-white'
-                  }`}
+                    }`}
                 >
                   {item.name}
                   {location.pathname === item.path && (
@@ -144,17 +142,16 @@ export function Navbar() {
                     <Link
                       to={item.path}
                       onClick={() => setIsOpen(false)}
-                      className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
-                        location.pathname === item.path
+                      className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${location.pathname === item.path
                           ? 'text-primary-400 bg-primary-500/10'
                           : 'text-slate-300 hover:text-white hover:bg-slate-800'
-                      }`}
+                        }`}
                     >
                       {item.name}
                     </Link>
                   </motion.div>
                 ))}
-                
+
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -166,7 +163,6 @@ export function Navbar() {
                     className="flex items-center space-x-2 px-3 py-2 text-slate-300 hover:text-white transition-colors duration-200"
                   >
                     {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                    <span>Toggle Theme</span>
                   </button>
                 </motion.div>
               </div>

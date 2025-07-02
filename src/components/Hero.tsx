@@ -188,7 +188,11 @@ export function Hero() {
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
                         <span className="text-sm">
-                          {new Date(currentAnime.aired.from).getFullYear()}
+                          {new Date(currentAnime.aired.from).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })}
                         </span>
                       </div>
                     )}
@@ -265,8 +269,8 @@ export function Hero() {
             key={anime.mal_id}
             onClick={() => setCurrentSlide(index)}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlide
-                ? 'bg-primary-500 w-8'
-                : 'bg-white/30 hover:bg-white/50'
+              ? 'bg-primary-500 w-8'
+              : 'bg-white/30 hover:bg-white/50'
               }`}
           />
         ))}
