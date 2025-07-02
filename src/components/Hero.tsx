@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Play, Pause, Calendar, Star, Clock, Plus } from 'lucide-react';
+import { Play, Pause, Calendar, Star, Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { jikanApi } from '../services/jikanApi';
 import { formatDistanceToNow } from 'date-fns';
@@ -12,6 +12,7 @@ export function Hero() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [upcomingAnime, setUpcomingAnime] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const dragStartX = useRef<number | null>(null);
 
   useEffect(() => {
     loadUpcomingAnime();
@@ -59,6 +60,30 @@ export function Hero() {
     }
   };
 
+  const handleDragStart = (e: React.TouchEvent | React.MouseEvent) => {
+    dragStartX.current =
+      'touches' in e
+        ? e.touches[0].clientX
+        : e.clientX;
+  };
+
+  const handleDragEnd = (e: React.TouchEvent | React.MouseEvent) => {
+    if (dragStartX.current === null) return;
+    const endX =
+      'changedTouches' in e
+        ? e.changedTouches[0].clientX
+        : e.clientX;
+    const diff = endX - dragStartX.current;
+    if (Math.abs(diff) > 50) {
+      if (diff < 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+    dragStartX.current = null;
+  };
+
   if (isLoading) {
     return (
       <div className="relative h-screen bg-white dark:bg-slate-900 flex items-center justify-center">
@@ -100,7 +125,24 @@ export function Hero() {
           </div>
 
           {/* Content */}
-          <div className="relative h-full flex items-center">
+          <input
+            type="range"
+            min={1}
+            max={upcomingAnime.length}
+            value={currentSlide + 1}
+            onChange={e => setCurrentSlide(Number(e.target.value) - 1)}
+            className="relative h-full w-full flex items-center touch-pan-x select-none cursor-grab accent-primary-500"
+            aria-label="Upcoming anime carousel"
+            onTouchStart={handleDragStart}
+            onTouchEnd={handleDragEnd}
+            onMouseDown={handleDragStart}
+            onMouseUp={handleDragEnd}
+            style={{ zIndex: 2, position: 'absolute', top: 0, left: 0, opacity: 0, height: '100%' }}
+          />
+          <div
+            className="relative h-full flex items-center touch-pan-x select-none cursor-grab"
+            style={{ pointerEvents: 'none' }}
+          >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <div className="max-w-2xl">
                 <motion.div
@@ -146,11 +188,7 @@ export function Hero() {
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
                         <span className="text-sm">
-                          {new Date(currentAnime.aired.from).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
+                          {new Date(currentAnime.aired.from).getFullYear()}
                         </span>
                       </div>
                     )}
@@ -196,13 +234,13 @@ export function Hero() {
                     <Link to={`/anime/${currentAnime.mal_id}`}>
                       <Button size="lg" className="bg-gradient-to-r from-primary-600 to-primary-500">
                         <Play className="w-5 h-5 mr-2" />
-                        Detail
+                        Details
                       </Button>
                     </Link>
 
                     <Button variant="outline" size="lg">
                       <Plus className="w-5 h-5 mr-2" />
-                      Add to Watchlist
+                      Watchlist
                     </Button>
                   </div>
                 </motion.div>
@@ -211,21 +249,6 @@ export function Hero() {
           </div>
         </motion.div>
       </AnimatePresence>
-
-      {/* Navigation */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full text-white transition-all duration-200 group"
-      >
-        <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full text-white transition-all duration-200 group"
-      >
-        <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
-      </button>
 
       {/* Play/Pause */}
       <button

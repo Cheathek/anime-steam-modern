@@ -88,7 +88,7 @@ export function HomePage() {
         />
 
         <AnimeSection
-          title="Upcoming Anime"
+          title="Upcoming"
           anime={sections.upcoming.data}
           isLoading={sections.upcoming.loading}
           linkTo="/seasonal?upcoming=true"

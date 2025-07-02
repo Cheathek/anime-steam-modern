@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './pages/HomePage';
+import NotFoundPage from './pages/NotFoundPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { AnimeDetailPage } from './pages/AnimeDetailPage';
 
@@ -15,6 +16,7 @@ function App() {
           
           <AnimatePresence mode="wait">
             <Routes>
+              <Route path="*" element={<NotFoundPage />} />
               <Route path="/" element={<HomePage />} />
               <Route path="/top" element={<CategoryPage />} />
               <Route path="/seasonal" element={<CategoryPage />} />
