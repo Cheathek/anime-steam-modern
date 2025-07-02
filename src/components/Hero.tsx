@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Play, Pause, Calendar, Star, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play, Pause, Calendar, Star, Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { jikanApi } from '../services/jikanApi';
 import { formatDistanceToNow } from 'date-fns';
@@ -135,7 +135,7 @@ export function Hero() {
                         <span className="font-medium">{currentAnime.score}</span>
                       </div>
                     )}
-                    
+
                     {currentAnime.type && (
                       <span className="px-3 py-1 bg-slate-800/60 backdrop-blur-sm rounded-full text-sm font-medium">
                         {currentAnime.type}
@@ -146,7 +146,11 @@ export function Hero() {
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
                         <span className="text-sm">
-                          {new Date(currentAnime.aired.from).getFullYear()}
+                          {new Date(currentAnime.aired.from).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })}
                         </span>
                       </div>
                     )}
@@ -192,11 +196,12 @@ export function Hero() {
                     <Link to={`/anime/${currentAnime.mal_id}`}>
                       <Button size="lg" className="bg-gradient-to-r from-primary-600 to-primary-500">
                         <Play className="w-5 h-5 mr-2" />
-                        Learn More
+                        Detail
                       </Button>
                     </Link>
-                    
+
                     <Button variant="outline" size="lg">
+                      <Plus className="w-5 h-5 mr-2" />
                       Add to Watchlist
                     </Button>
                   </div>
@@ -236,11 +241,10 @@ export function Hero() {
           <button
             key={anime.mal_id}
             onClick={() => setCurrentSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              index === currentSlide
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlide
                 ? 'bg-primary-500 w-8'
                 : 'bg-white/30 hover:bg-white/50'
-            }`}
+              }`}
           />
         ))}
       </div>

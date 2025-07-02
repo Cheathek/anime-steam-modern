@@ -39,8 +39,8 @@ export function AnimeDetailPage() {
       ]);
 
       setAnime(animeResponse.data);
-      setCharacters(charactersResponse.data?.slice(0, 12) || []);
-      setStaff(staffResponse.data?.slice(0, 8) || []);
+      setCharacters(charactersResponse.data?.slice(0, 12) ?? []);
+      setStaff(staffResponse.data?.slice(0, 8) ?? []);
     } catch (error) {
       console.error('Failed to load anime details:', error);
     } finally {
@@ -147,9 +147,9 @@ export function AnimeDetailPage() {
                 {anime.external && anime.external.length > 0 && (
                   <div className="space-y-2">
                     <h3 className="font-semibold text-black dark:text-white">External Links</h3>
-                    {anime.external.slice(0, 3).map((link: any, index: number) => (
+                    {anime.external.slice(0, 3).map((link: any) => (
                       <a
-                        key={index}
+                        key={link.url}
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -341,7 +341,7 @@ export function AnimeDetailPage() {
                           </p>
                         </div>
                         {/* Voice Actor Info & Image */}
-                        {char.voice_actors && char.voice_actors[0] && (
+                        {char.voice_actors?.[0] && (
                           <div className="flex items-center space-x-2">
                             <div className="text-right">
                               <p className="text-black dark:text-white text-sm truncate max-w-24">

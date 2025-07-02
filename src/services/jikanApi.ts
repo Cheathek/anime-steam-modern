@@ -8,7 +8,7 @@ interface CacheItem {
 }
 
 class JikanAPI {
-  private cache = new Map<string, CacheItem>();
+  private readonly cache = new Map<string, CacheItem>();
   private lastRequestTime = 0;
 
   private async rateLimit() {
@@ -78,8 +78,8 @@ class JikanAPI {
     const currentYear = new Date().getFullYear();
     const currentSeason = this.getCurrentSeason();
     
-    const targetYear = year || currentYear;
-    const targetSeason = season || currentSeason;
+    const targetYear = year ?? currentYear;
+    const targetSeason = season ?? currentSeason;
     
     return this.request(`/seasons/${targetYear}/${targetSeason}`);
   }
@@ -100,12 +100,22 @@ class JikanAPI {
     return this.request(`/anime/${id}/staff`);
   }
 
-  async searchAnime(query: string, params?: any): Promise<any> {
+  async searchAnime(
+    query: string,
+    params?: Record<string, string | number | boolean>
+  ): Promise<any> {
     let endpoint = `/anime?q=${encodeURIComponent(query)}`;
     
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
-        if (value) endpoint += `&${key}=${value}`;
+        if (
+          value !== undefined &&
+          value !== null &&
+          !(typeof value === 'object' && Object.keys(value).length === 0)
+        ) {
+          const encodedValue = encodeURIComponent(String(value));
+          endpoint += `&${key}=${encodedValue}`;
+        }
       });
     }
     
@@ -129,7 +139,7 @@ class JikanAPI {
     const groups = new Map<string, any[]>();
     
     animeList.forEach(anime => {
-      const baseTitle = this.normalizeTitle(anime.title);
+      const baseTitle = this.normalizeTitle(anime.title_english ?? anime.title);
       if (!groups.has(baseTitle)) {
         groups.set(baseTitle, []);
       }
@@ -139,11 +149,13 @@ class JikanAPI {
     return Array.from(groups.values()).map(group => {
       // Priority: Upcoming > Airing > Finished
       const statusPriority = { 'Not yet aired': 3, 'Currently Airing': 2, 'Finished Airing': 1 };
-      return group.sort((a, b) => {
+      // Move sort to a separate statement (to avoid mutating original array)
+      const sortedGroup = [...group].sort((a, b) => {
         const aPriority = statusPriority[a.status as keyof typeof statusPriority] || 0;
         const bPriority = statusPriority[b.status as keyof typeof statusPriority] || 0;
         return bPriority - aPriority;
-      })[0];
+      });
+      return sortedGroup[0];
     });
   }
 

@@ -164,6 +164,8 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
                           } else if (anime.status === 'Not yet aired') {
                             statusLabel = 'Upcoming';
                           }
+                          // Prefer English title, fallback to romanized Japanese
+                          const displayTitle = anime.title_english ?? anime.title;
                           return (
                             <motion.button
                               key={anime.mal_id}
@@ -176,7 +178,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
                               {/* Anime Poster */}
                               <img
                                 src={anime.images?.jpg?.image_url ?? anime.images?.jpg?.small_image_url}
-                                alt={anime.title}
+                                alt={displayTitle}
                                 className="w-12 h-16 object-cover rounded-md flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
                                 loading="lazy"
                               />
@@ -184,7 +186,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
                               {/* Main Content */}
                               <div className="flex-1 min-w-0">
                                 <h3 className="text-white font-medium truncate group-hover:text-primary-300 transition-colors">
-                                  {anime.title}
+                                  {displayTitle}
                                 </h3>
 
                                 {/* Badges */}
@@ -223,7 +225,9 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
                   if (query && !isLoading) {
                     return (
                       <div className="p-8 text-center text-slate-400">
-                        No results found for "{query}"
+                        <Search className="w-8 h-8 mx-auto mb-4 text-primary-400" />
+                        <h3 className="text-lg font-semibold text-white mb-2">No Results Found</h3>
+                        "{query}"
                       </div>
                     );
                   }
@@ -233,21 +237,24 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
                       <div className="p-4">
                         <h3 className="text-lg font-semibold text-white mb-3">Trending Now</h3>
                         <div className="space-y-2">
-                          {trending.map((anime, index) => (
-                            <motion.button
-                              key={anime.mal_id}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.1 }}
-                              onClick={() => handleAnimeClick(anime.mal_id)}
-                              className="w-full flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-left group"
-                            >
-                              <Play className="w-4 h-4 text-primary-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                              <span className="text-slate-300 hover:text-white transition-colors truncate">
-                                {anime.title}
-                              </span>
-                            </motion.button>
-                          ))}
+                          {trending.map((anime, index) => {
+                            const displayTitle = anime.title_english ?? anime.title;
+                            return (
+                              <motion.button
+                                key={anime.mal_id}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                onClick={() => handleAnimeClick(anime.mal_id)}
+                                className="w-full flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-left group"
+                              >
+                                <Play className="w-4 h-4 text-primary-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                                <span className="text-slate-300 hover:text-white transition-colors truncate">
+                                  {displayTitle}
+                                </span>
+                              </motion.button>
+                            );
+                          })}
                         </div>
                       </div>
                     );
