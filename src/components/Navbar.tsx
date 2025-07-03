@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Menu, X, Sun, Moon, Play, Film, Star, Calendar, Grid } from 'lucide-react';
+import { Search, Menu, X, Sun, Moon, Play, Film, Calendar, Home, TrendingUp, Compass } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { SearchBar } from './SearchBar';
 
@@ -14,11 +14,11 @@ export function Navbar() {
 
   // Add an icon property to each nav item
   const navItems = [
-    { name: 'Home', path: '/', icon: <Play className="w-4 h-4 mr-2" /> },
-    { name: 'Top Anime', path: '/top', icon: <Star className="w-4 h-4 mr-2" /> },
+    { name: 'Home', path: '/', icon: <Home className="w-4 h-4 mr-2" /> },
+    { name: 'Top Anime', path: '/top', icon: <TrendingUp className="w-4 h-4 mr-2" /> },
     { name: 'Seasonal', path: '/seasonal', icon: <Calendar className="w-4 h-4 mr-2" /> },
     { name: 'Movies', path: '/movies', icon: <Film className="w-4 h-4 mr-2" /> },
-    { name: 'Browse', path: '/browse', icon: <Grid className="w-4 h-4 mr-2" /> },
+    { name: 'Browse', path: '/browse', icon: <Compass className="w-4 h-4 mr-2" /> },
   ];
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Star, Clock, Plus } from 'lucide-react';
+import { Play, Pause, Star, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useRef } from 'react';
 import { Button } from './ui/Button';
@@ -162,11 +162,6 @@ export function HeroBanner({
                       Details
                     </Button>
                   </Link>
-
-                  <Button variant="outline" size="sm" className="w-full sm:w-auto text-sm sm:text-base">
-                    <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    Watchlist
-                  </Button>
                 </div>
               </motion.div>
             </div>

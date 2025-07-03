@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
+import {
   Star,
-  Clock, 
-  Users, 
-  Play, 
-  Plus, 
-  Heart,
+  Clock,
+  Users,
+  Play,
   ChevronLeft,
   ExternalLink
 } from 'lucide-react';
@@ -132,17 +130,6 @@ export function AnimeDetailPage() {
                 className="w-full aspect-[2/3] object-cover"
               />
               <div className="p-6 space-y-4">
-                {/* Action Buttons */}
-                <div className="grid grid-cols-2 gap-3">
-                  <Button className="w-full">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Watchlist
-                  </Button>
-                  <Button variant="outline" className="w-full">
-                    <Heart className="w-4 h-4 mr-2" />
-                    Favorite
-                  </Button>
-                </div>
                 {/* External Links */}
                 {anime.external && anime.external.length > 0 && (
                   <div className="space-y-2">
@@ -210,15 +197,22 @@ export function AnimeDetailPage() {
                   </div>
                 )}
 
-                {anime.episodes && (
+                <div className="flex flex-col space-y-1">
                   <div className="flex items-center space-x-2">
                     <Play className="w-5 h-5 text-primary-700 dark:text-primary-400" />
                     <div>
-                      <p className="text-black dark:text-white font-semibold">{anime.episodes}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Episodes</p>
+                      <p className="text-black dark:text-white font-semibold">
+                        {/* Show aired episodes for currently airing, otherwise total episodes */}
+                        {anime.status === "Currently Airing"
+                          ? (anime.episodes_aired ?? 'N/A')
+                          : (anime.episodes ?? 'N/A')}
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        {anime.status === "Currently Airing" ? "Episodes Aired" : "Total Episodes"}
+                      </p>
                     </div>
                   </div>
-                )}
+                </div>
 
                 {anime.duration && (
                   <div className="flex items-center space-x-2">
@@ -261,6 +255,15 @@ export function AnimeDetailPage() {
                     <div>
                       <span className="text-slate-500 dark:text-slate-400">Aired:</span>
                       <span className="text-black dark:text-white ml-2">{anime.aired.string}</span>
+                    </div>
+                  )}
+                  {/* Show broadcast info if currently airing */}
+                  {anime.status === "Currently Airing" && anime.broadcast?.day && anime.broadcast?.time && (
+                    <div className="mt-4">
+                      <span className="text-slate-500 dark:text-slate-400 text-sm">Broadcast:</span>
+                      <span className="ml-2 text-primary-500 text-sm">
+                        New episode every {anime.broadcast.day} at {anime.broadcast.time} (Japan)
+                      </span>
                     </div>
                   )}
                   {anime.studios && anime.studios.length > 0 && (
