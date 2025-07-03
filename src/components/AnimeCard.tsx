@@ -34,7 +34,6 @@ export function AnimeCard({
   animationDelay = 0
 }: Readonly<AnimeCardProps>) {
   const [imageLoaded, setImageLoaded] = React.useState(false);
-  const [isHovered, setIsHovered] = React.useState(false);
 
   const getStatusColor = (status?: string) => {
     switch (status) {

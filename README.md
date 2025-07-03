@@ -18,31 +18,29 @@ AniStream is a modern web application for discovering, browsing, and learning ab
 ## Getting Started
 
 1. **Clone the repository:**
-   ```sh
+   ```
    git clone https://github.com/Cheathek/anime-steam-modern.git
-   ```
-   ```
    cd anime-steam-modern
    ```
 
 2. **Install dependencies:**
-   ```sh
+   ```
    npm install
    ```
 
 3. **Run the development server:**
-   ```sh
+   ```
    npm run dev
    ```
    The app will be available at [http://localhost:5173](http://localhost:5173).
 
 4. **Build for production:**
-   ```sh
+   ```
    npm run build
    ```
 
 5. **Preview the production build:**
-   ```sh
+   ```
    npm run preview
    ```
 
@@ -58,6 +56,13 @@ src/
   main.tsx         # App entry point
   App.tsx          # Main App component
 ```
+
+<!-- ```diff
++ This is green text
+- This is red text
+# This is a comment
+``` -->
+
 
 ## Customization
 

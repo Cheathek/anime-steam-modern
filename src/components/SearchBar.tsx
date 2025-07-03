@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Star, Calendar, Play } from 'lucide-react';
+import { Search, X, Star, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { jikanApi } from '../services/jikanApi';
 import { Loading } from './ui/Loading';
@@ -117,7 +117,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
           >
             {/* Search Input */}
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none h-full">
                 <Search className="h-5 w-5 text-slate-400" />
               </div>
               <input
@@ -127,7 +127,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Search for anime..."
-                className="capitalize w-full pl-10 pr-12 py-4 bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="capitalize w-full pl-10 pr-12 py-4 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <button
                 onClick={onClose}
@@ -248,7 +248,7 @@ export function SearchBar({ isOpen, onClose }: SearchBarProps) {
                                 onClick={() => handleAnimeClick(anime.mal_id)}
                                 className="w-full flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-left group"
                               >
-                                <Play className="w-4 h-4 text-primary-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                                <Search className="w-4 h-4 text-primary-400 flex-shrink-0 group-hover:scale-110 transition-transform" />
                                 <span className="text-slate-300 hover:text-white transition-colors truncate">
                                   {displayTitle}
                                 </span>
